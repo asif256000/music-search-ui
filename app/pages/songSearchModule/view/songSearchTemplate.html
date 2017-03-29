@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <!-- Nav tabs -->
+            <div class="card">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab" ng-click="getSongsList(0)">Track List</a></li>
+                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab" ng-click="getGenersList(0)">Geners</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+                        <div class="container">
+                            <div class="widthContraint">
+                                <div class="inputContainer">
+                                    <div class="row">
+                                        <div class="col-lg-9">
+                                            <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control" placeholder="Search for.." id="searchField" ng-model="songName">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="button" id="searchButton" data-loading-text="Searching.." ng-click="getSingleTracks()">Search</button>
+                                        </span>
+                                    </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="input-group input-group-sm">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary" type="button" id="searchButton" data-loading-text="Searching.." ng-click="addDisplayCntrl();showHide()">Add Track</button>
+                                            </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="progressContainer">
+                                </div>
+                                <ul class="resultsContainer">
+                                    <li>
+                                        <div class="panel panel-default" id="searchPanel">
+                                            <div class="panel-heading" id="searchPanelHeading">Result</div>
+                                            <div ng-if="IsVisible">
+                                            <div class="panel-body">
+
+                                                <table class="table customTableDisplay" id="addressTable">
+                                                    <tr>
+                                                        <td>Result Details</td>
+                                                    </tr>
+                                                </table>
+
+                                            </div>
+                                            <div style="background-color: #fafafa; border-top: 1px solid #dddddd;" class="panel-body">
+
+                                                <table class="table customTableDisplay" id="addressTable" ng-if="isAddDisplay">
+                                                    <tr>
+                                                        <td>Title</td>
+                                                        <td ng-if="isEditVisible1">{{songDetails.title}}</td>
+                                                        <td ng-if="isEditVisible">
+                                                            <form>
+                                                                <div class="input-group input-group-sm">
+                                                                    <input type="text" class="form-control" placeholder="Search for.." id="editGenrName" ng-model="editTrackFormData.TrackName">
+                                                                </div>
+                                                            </form>
+                                                        </td>
+                                                        <td><a href="" ng-click="showHide(1)"><span class="fa fa-times displayStyle"></span></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Generation</td>
+                                                        <td><span ng-repeat="genrs in songDetails.genres">{{genrs.name}}</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Rating</td>
+                                                        <td>{{songDetails.rating}}</td>
+                                                        <td>
+                                                            <a class="btn btn-primary displayStyle" href="#" role="button" ng-if="isEditVisible1" ng-click="EditDisplayCntrl(1)">Edit</a>
+                                                            <a class="btn btn-primary displayStyle" href="#" role="button" ng-click="editTrack(songDetails.id,songDetails.rating,songDetails.genres);showHide(1)" ng-if="isEditVisible">Save</a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <table class="table customTableDisplay" id="addressTable" ng-if="isAddDisplay1">
+                                                    <form>
+                                                        <tr>
+                                                            <td>Title</td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm">
+                                                                    <input type="text" class="form-control" placeholder="Search for.." id="editGenrName" ng-model="addTrackFormDetails.TrackName">
+                                                                </div>
+                                                            </td>
+                                                            <td><a href="" ng-click="addDisplayCntrl();showHide(1)"><span class="fa fa-times displayStyle"></span></a></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Generation</td>
+                                                            <td>
+                                                                <select class="form-control" ng-model="addTrackFormDetails.selectedGenrId">
+                                                                    <option value="" selected>Select Genr..</option>
+                                                                    <option ng-repeat="songgnrName in songGnr track by $index" value="{{songgnrName.id}}">{{songgnrName.neme}}</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Rating</td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm">
+                                                                    <input type="text" class="form-control" placeholder="Search for.." id="editGenrName" ng-model="addTrackFormDetails.rating">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <a class="btn btn-primary displayStyle" href="#" role="button" ng-click="AddTrack();showHide(1)">Save</a>
+                                                            </td>
+                                                        </tr>
+                                                    </form>
+                                                </table>
+                                            </div>
+                                            </div>
+                                            <table class="table" id="deviceTable">
+                                                <tr>
+                                                    <td colspan="5">
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Ratings</th>
+                                                </tr>
+                                                <tr ng-repeat="song in songlist track by $index">
+                                                    <td class="dataDispaly"><a href="" ng-click="showHide(0);EditDisplayCntrl(0);addDisplayCntrl(1);musicDetails(song)">{{song.title}}[<span ng-repeat="gnr in song.genres">{{gnr.name}}</span>]</a></td>
+                                                    <td>
+                                                        <div ng-repeat="ratng in starPrintNumber(1,song.rating)" style="display: inline"><span class="fa fa-star"></span></div>
+                                                        <div ng-repeat="ratng in starPrintNumber(0,song.rating)" style="display: inline"><span class="fa fa-star-o"></span></div>
+                                                        <!--<span class="fa fa-star"></span>
+                                                        <span class="fa fa-star-o"></span>-->
+                                                        <!--<span class="fa fa-star-o"></span>
+                                                        <span class="fa fa-star-o"></span>
+                                                        <span class="fa fa-star-o"></span>-->
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a class="btn btn-primary" href="#" role="button" ng-click="getSongsList(2)">Previous</a></td>
+                                                    <td><a class="btn btn-primary" href="#" role="button" ng-click="getSongsList(1)">Next</a></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="profile">
+                        <div class="container">
+                            <div class="widthContraint">
+                                <div class="inputContainer">
+                                    <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="input-group input-group-sm">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="button" id="searchButton" data-loading-text="Searching.." ng-click="addDisplayCntrl();showHide()">Add Genr</button>
+                                        </span>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="progressContainer">
+                                </div>
+                                <ul class="resultsContainer">
+                                    <li>
+                                        <div class="panel panel-default" id="searchPanel">
+                                            <div class="panel-heading" id="searchPanelHeading">Result</div>
+                                            <div ng-if="IsVisible">
+                                                <div class="panel-body">
+
+                                                    <table class="table customTableDisplay" id="addressTable" ng-hide="showme">
+                                                        <tr>
+                                                            <td>Result Details</td>
+                                                        </tr>
+                                                    </table>
+
+                                                </div>
+                                                <div style="background-color: #fafafa; border-top: 1px solid #dddddd;" class="panel-body">
+
+                                                    <table class="table customTableDisplay" id="addressTable" ng-if="isAddDisplay">
+                                                        <tr>
+                                                            <td>Title</td>
+                                                            <td ng-if="isEditVisible1">{{gnrDetails.name}}</td>
+                                                            <td ng-if="isEditVisible">
+                                                                <form>
+                                                                <div class="input-group input-group-sm">
+                                                                    <input type="text" class="form-control" placeholder="Search for.." id="editGenrName" ng-model="editGenrFormData.generName">
+                                                                </div>
+                                                                </form>
+                                                            </td>
+                                                            <td><a href="" ng-click="showHide(1)"><span class="fa fa-times displayStyle"></span></a></td>
+                                                        </tr>
+                                                        <!--<tr>
+                                                            <td>Generation</td>
+                                                            <td><span ng-repeat="genrs in songDetails.genres">{{genrs.name}}</span></td>
+                                                        </tr>-->
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>
+                                                                <a class="btn btn-primary displayStyle" href="#" role="button" ng-click="editGenr(gnrDetails.id)" ng-if="isEditVisible">Save</a>
+                                                                <a class="btn btn-primary displayStyle" href="#" role="button" ng-if="isEditVisible1" ng-click="EditDisplayCntrl(1)">Edit</a>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <table class="table customTableDisplay" id="addressTable" ng-if="isAddDisplay1">
+                                                        <tr>
+                                                            <td>Title</td>
+                                                            <td>
+                                                                <form>
+                                                                    <div class="input-group input-group-sm">
+                                                                        <input type="text" class="form-control" placeholder="Search for.." id="editGenrName" ng-model="addGenrFormDetails.addgenerName">
+                                                                    </div>
+                                                                </form>
+                                                            </td>
+                                                            <td><a href="" ng-click="showHide(1)"><span class="fa fa-times displayStyle"></span></a></td>
+                                                        </tr>
+                                                        <!--<tr>
+                                                            <td>Generation</td>
+                                                            <td><span ng-repeat="genrs in songDetails.genres">{{genrs.name}}</span></td>
+                                                        </tr>-->
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>
+                                                                <a class="btn btn-primary displayStyle" href="#" role="button" ng-click="AddGenr()">Save</a>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <table class="table" id="deviceTable">
+                                                <tr>
+                                                    <td colspan="5">
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Name</th>
+                                                </tr>
+                                                <tr ng-repeat="gnr in gnrlist track by $index">
+                                                    <td class="dataDispaly"><a href="" ng-click="showHide();EditDisplayCntrl();addDisplayCntrl(1);genrsDetails(gnr)">{{gnr.name}}</a></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a class="btn btn-primary" href="#" role="button" ng-click="getGenersList(2)">Previous</a></td>
+                                                    <td><a class="btn btn-primary" href="#" role="button" ng-click="getGenersList(1)">Next</a></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--<div class="container">
+    <div class="widthContraint">
+        <div class="inputContainer">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control" placeholder="Search for.." id="searchField">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" id="searchButton" data-loading-text="Searching..">Search</button>
+                </span>
+            </div>
+        </div>
+        <div class="progressContainer">
+        </div>
+        <ul class="resultsContainer">
+            <li>
+                <div class="panel panel-default" id="searchPanel">
+                    <div class="panel-heading" id="searchPanelHeading">Result</div>
+                    <div ng-if="IsVisible">
+                    <div class="panel-body">
+
+                        <table class="table customTableDisplay" id="addressTable" ng-hide="showme">
+                            <tr>
+                                <td>Result Details</td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div style="background-color: #fafafa; border-top: 1px solid #dddddd;" class="panel-body">
+
+                        <table class="table customTableDisplay" id="addressTable">
+                            <tr>
+                                <td>Title</td>
+                                <td>{{songDetails.title}}</td>
+                                <td width="100%"><a href="" ng-click="showHide()"><span class="fa fa-times displayStyle"></span></a></td>
+                            </tr>
+                            <tr>
+                                <td>Generation</td>
+                                <td><span ng-repeat="genrs in songDetails.genres">{{genrs.name}}</span></td>
+                            </tr>
+                            <tr>
+                                <td>Rating</td>
+                                <td>{{songDetails.rating}}</td>
+                                <td><a class="btn btn-primary displayStyle" href="#" role="button" ng-click="">Edit</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                    </div>
+                    <table class="table" id="deviceTable">
+                        <tr>
+                            <td colspan="5">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Ratings</th>
+                        </tr>
+                        <tr ng-repeat="song in songlist track by $index">
+                            <td><a href="" ng-click="showHide();musicDetails(song)">{{song.title}}</a></td>
+                            <td><span class="fa fa-star-o"></span>
+                                <span class="fa fa-star-o"></span>
+                                <span class="fa fa-star-o"></span>
+                                <span class="fa fa-star-o"></span>
+                                <span class="fa fa-star-o"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a class="btn btn-primary" href="#" role="button" ng-click="getSongsList(2)">Previous</a></td>
+                            <td><a class="btn btn-primary" href="#" role="button" ng-click="getSongsList(1)">Next</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>-->
+
+</body>
+</html>
